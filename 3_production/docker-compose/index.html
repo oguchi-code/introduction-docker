@@ -1,0 +1,1146 @@
+
+<!doctype html>
+<html lang="ja" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      <link rel="shortcut icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.2.4">
+    
+    
+      
+        <title>docker-compose - 入門 Docker</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.15aa0b43.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.75751829.min.css">
+        
+          
+          
+          <meta name="theme-color" content="#4051b5">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
+      
+    
+    
+    
+      <link rel="stylesheet" href="../../assets/custom.css">
+    
+    
+      
+        
+<script>window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga("create","UA-136697307-1","y-ohgi.com"),ga("set","anonymizeIp",!0),ga("send","pageview"),document.addEventListener("DOMContentLoaded",function(){document.forms.search&&document.forms.search.query.addEventListener("blur",function(){if(this.value){var e=document.location.pathname;ga("send","pageview",e+"?q="+this.value)}})}),document.addEventListener("DOMContentSwitch",function(){ga("send","pageview",document.location.pathname)})</script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="indigo" data-md-color-accent="indigo">
+      
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#_1" class="md-skip">
+          コンテンツにスキップ
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid" aria-label="Header">
+    <a href="../.." title="入門 Docker" class="md-header-nav__button md-logo" aria-label="入門 Docker">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header-nav__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header-nav__title" data-md-component="header-title">
+      <div class="md-header-nav__ellipsis">
+        <div class="md-header-nav__topic">
+          <span class="md-ellipsis">
+            入門 Docker
+          </span>
+        </div>
+        <div class="md-header-nav__topic">
+          <span class="md-ellipsis">
+            
+              docker-compose
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      <label class="md-header-nav__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="検索" placeholder="検索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" data-md-component="search-reset" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="入門 Docker" class="md-nav__button md-logo" aria-label="入門 Docker">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    入門 Docker
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+
+  <li class="md-nav__item">
+    <a href="../.." class="md-nav__link">
+      Home
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+
+  
+  <li class="md-nav__item md-nav__item--nested">
+    
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2" >
+    
+    <label class="md-nav__link" for="nav-2">
+      はじめに
+      <span class="md-nav__icon md-icon"></span>
+    </label>
+    <nav class="md-nav" aria-label="はじめに" data-md-level="1">
+      <label class="md-nav__title" for="nav-2">
+        <span class="md-nav__icon md-icon"></span>
+        はじめに
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../../1_introduction/docker/" class="md-nav__link">
+      Dockerとは
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../../1_introduction/vm-docker/" class="md-nav__link">
+      VMとDocker
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../../1_introduction/hello-docker/" class="md-nav__link">
+      Hello Docker !
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+
+  
+  <li class="md-nav__item md-nav__item--nested">
+    
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3" >
+    
+    <label class="md-nav__link" for="nav-3">
+      コンポーネント
+      <span class="md-nav__icon md-icon"></span>
+    </label>
+    <nav class="md-nav" aria-label="コンポーネント" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
+        <span class="md-nav__icon md-icon"></span>
+        コンポーネント
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../../2_component/image/" class="md-nav__link">
+      image
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../../2_component/dockerfile/" class="md-nav__link">
+      dockerfile
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../../2_component/container/" class="md-nav__link">
+      container
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../../2_component/network/" class="md-nav__link">
+      network
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../../2_component/volume/" class="md-nav__link">
+      volume
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  
+
+
+  
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4" checked>
+    
+    <label class="md-nav__link" for="nav-4">
+      プロダクションでの活用
+      <span class="md-nav__icon md-icon"></span>
+    </label>
+    <nav class="md-nav" aria-label="プロダクションでの活用" data-md-level="1">
+      <label class="md-nav__title" for="nav-4">
+        <span class="md-nav__icon md-icon"></span>
+        プロダクションでの活用
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../design/" class="md-nav__link">
+      設計
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../security/" class="md-nav__link">
+      セキュリティ
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../debug/" class="md-nav__link">
+      デバッグ
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../image/" class="md-nav__link">
+      イメージの仕組み
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../dockerfile/" class="md-nav__link">
+      Dockerfileのベストプラクティス
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../orchestration/" class="md-nav__link">
+      オーケストレーションツール
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        docker-compose
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+    
+    <a href="./" class="md-nav__link md-nav__link--active">
+      docker-compose
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="目次">
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目次
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    概要
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nginx" class="md-nav__link">
+    nginxを立ち上げるサンプル
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#laravel" class="md-nav__link">
+    Laravelのサンプルを元に学ぶ
+  </a>
+  
+    <nav class="md-nav" aria-label="Laravelのサンプルを元に学ぶ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-laraveldocker-compose" class="md-nav__link">
+    1. Laravelをdocker-composeで起動する
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-docker-composeyaml" class="md-nav__link">
+    2. docker-compose.yamlを読む
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#version" class="md-nav__link">
+    version
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#services" class="md-nav__link">
+    services
+  </a>
+  
+    <nav class="md-nav" aria-label="services">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#image" class="md-nav__link">
+    image
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#build" class="md-nav__link">
+    build
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#volumes" class="md-nav__link">
+    volumes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ports" class="md-nav__link">
+    ports
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#environment" class="md-nav__link">
+    environment
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#env_file" class="md-nav__link">
+    env_file
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command" class="md-nav__link">
+    command
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#docker-compose" class="md-nav__link">
+    docker-composeのコマンド
+  </a>
+  
+    <nav class="md-nav" aria-label="docker-composeのコマンド">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#up" class="md-nav__link">
+    up
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#down" class="md-nav__link">
+    down
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rm" class="md-nav__link">
+    rm
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../introduction/" class="md-nav__link">
+      プロダクションへの導入
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+
+  
+  <li class="md-nav__item md-nav__item--nested">
+    
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5" >
+    
+    <label class="md-nav__link" for="nav-5">
+      Tips
+      <span class="md-nav__icon md-icon"></span>
+    </label>
+    <nav class="md-nav" aria-label="Tips" data-md-level="1">
+      <label class="md-nav__title" for="nav-5">
+        <span class="md-nav__icon md-icon"></span>
+        Tips
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../../4_tips/tools/" class="md-nav__link">
+      tools
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../../4_tips/docker-compose/" class="md-nav__link">
+      docker-compose
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../../4_tips/book/" class="md-nav__link">
+      参考書
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="目次">
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目次
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    概要
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nginx" class="md-nav__link">
+    nginxを立ち上げるサンプル
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#laravel" class="md-nav__link">
+    Laravelのサンプルを元に学ぶ
+  </a>
+  
+    <nav class="md-nav" aria-label="Laravelのサンプルを元に学ぶ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-laraveldocker-compose" class="md-nav__link">
+    1. Laravelをdocker-composeで起動する
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-docker-composeyaml" class="md-nav__link">
+    2. docker-compose.yamlを読む
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#version" class="md-nav__link">
+    version
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#services" class="md-nav__link">
+    services
+  </a>
+  
+    <nav class="md-nav" aria-label="services">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#image" class="md-nav__link">
+    image
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#build" class="md-nav__link">
+    build
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#volumes" class="md-nav__link">
+    volumes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ports" class="md-nav__link">
+    ports
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#environment" class="md-nav__link">
+    environment
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#env_file" class="md-nav__link">
+    env_file
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command" class="md-nav__link">
+    command
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#docker-compose" class="md-nav__link">
+    docker-composeのコマンド
+  </a>
+  
+    <nav class="md-nav" aria-label="docker-composeのコマンド">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#up" class="md-nav__link">
+    up
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#down" class="md-nav__link">
+    down
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rm" class="md-nav__link">
+    rm
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                  <h1>docker-compose</h1>
+                
+                <p>プロジェクトでDockerを使用する際、まず使用するであろうdocker-composeを紹介します。</p>
+<h2 id="_1">概要<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>docker-composeはローカルでDockerのオーケストレーションを行うためのツールです。<br />
+DockerのビルドからNetworkやVolumeの管理をコードベースで定義して行ってくれます。</p>
+<h2 id="nginx">nginxを立ち上げるサンプル<a class="headerlink" href="#nginx" title="Permanent link">&para;</a></h2>
+<p>docker-composeはDockerの構成をyamlを定義し、そのyamlを元に起動します。<br />
+例えばnginxを起動し、ホストの8080ポートへコンテナの80ポートをフォワードする設定は以下のyamlになります。</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">version</span><span class="p">:</span> <span class="s">&#39;3.7&#39;</span>
+
+<span class="nt">services</span><span class="p">:</span>
+  <span class="nt">nginx</span><span class="p">:</span>
+    <span class="nt">image</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">nginx</span>
+    <span class="nt">ports</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">8080:80</span>
+</code></pre></div>
+
+<p><code>docker run -p 8080:80 nginx</code> とほぼ同じ動きをします(異なる点としては、docker-composeでは専用のNetworkを作成・使用する点です)。<br />
+単純なnginxの起動であれば素のdockerコマンドで問題ありませんが、ここにPHP, MySQL...と増えていくとその威力を発揮します。</p>
+<h2 id="laravel">Laravelのサンプルを元に学ぶ<a class="headerlink" href="#laravel" title="Permanent link">&para;</a></h2>
+<p><img alt="laravel" src="../imgs/docker-compose-laravel.png" />
+雰囲気を知るために上記のような3つのコンテナを協調させて動かしてみましょう。</p>
+<h3 id="1-laraveldocker-compose">1. Laravelをdocker-composeで起動する<a class="headerlink" href="#1-laraveldocker-compose" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code>$ git clone https://github.com/y-ohgi/introduction-docker.git
+$ cd introduction-docker/handson/laravel
+$ docker-compose up
+</code></pre></div>
+
+<p>Play with Docker上へポートが公開されるので、ブラウザで確認してみましょう。</p>
+<h3 id="2-docker-composeyaml">2. docker-compose.yamlを読む<a class="headerlink" href="#2-docker-composeyaml" title="Permanent link">&para;</a></h3>
+<p>起動したLaravelリポジトリのDockerfileをもとに、docker-compose.yamlの書き方を学びましょう。  </p>
+<div class="codehilite"><pre><span></span><code><span class="nt">version</span><span class="p">:</span> <span class="s">&#39;3.7&#39;</span>
+
+<span class="nt">services</span><span class="p">:</span>
+  <span class="nt">nginx</span><span class="p">:</span>
+    <span class="nt">build</span><span class="p">:</span>
+      <span class="nt">context</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">.</span>
+      <span class="nt">dockerfile</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">docker/nginx/Dockerfile</span>
+    <span class="nt">volumes</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">./public:/var/www/html/public:ro</span>
+    <span class="nt">ports</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">8080:80</span>
+    <span class="nt">environment</span><span class="p">:</span>
+      <span class="nt">PHP_HOST</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">app</span>
+
+  <span class="nt">app</span><span class="p">:</span>
+    <span class="nt">build</span><span class="p">:</span>
+      <span class="nt">context</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">.</span>
+      <span class="nt">dockerfile</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Dockerfile</span>
+    <span class="nt">env_file</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">.env.example</span>
+    <span class="c1"># volumes:</span>
+    <span class="c1">#   - .:/var/www/html:cached</span>
+
+  <span class="nt">mysql</span><span class="p">:</span>
+    <span class="nt">image</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mysql:5.7</span>
+    <span class="nt">volumes</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">./mysql:/var/lib/mysql:delegated</span>
+    <span class="nt">command</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci</span>
+    <span class="nt">environment</span><span class="p">:</span>
+      <span class="nt">MYSQL_ALLOW_EMPTY_PASSWORD</span><span class="p">:</span> <span class="s">&#39;yes&#39;</span>
+    <span class="nt">ports</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">13306:3306</span>
+</code></pre></div>
+
+<h3 id="version">version<a class="headerlink" href="#version" title="Permanent link">&para;</a></h3>
+<p>docker-composeのバージョンを指定します。<br />
+特にこだわりがなければ最新のものを記述するようにしましょう。</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">version</span><span class="p">:</span> <span class="s">&#39;3.7&#39;</span>
+</code></pre></div>
+
+<h3 id="services">services<a class="headerlink" href="#services" title="Permanent link">&para;</a></h3>
+<p>起動するコンテナの定義を行います。<br />
+このdocker-compose.yamlでは <code>nginx</code> , <code>app</code> , <code>mysql</code> の3つが定義されています。  </p>
+<div class="codehilite"><pre><span></span><code><span class="nt">services</span><span class="p">:</span>
+  <span class="nt">nginx</span><span class="p">:</span>
+</code></pre></div>
+
+<h5 id="image">image<a class="headerlink" href="#image" title="Permanent link">&para;</a></h5>
+<p>コンテナを起動するDocker Image を指定します。</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">image</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mysql:5.7</span>
+</code></pre></div>
+
+<h4 id="build">build<a class="headerlink" href="#build" title="Permanent link">&para;</a></h4>
+<p>docker buildの実行情報を記述します。<br />
+ここで定義された情報を元にDockerをビルドし、そのビルドしたイメージ使用してコンテナを起動します。<br />
+<code>image</code> もしくは <code>build</code> どちらかを記述する必要があります。</p>
+<p>コマンドの場合、 <code>docker build -f docker/nginx/Dockerfile .</code> と同一です。</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">build</span><span class="p">:</span>
+  <span class="nt">context</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">.</span>
+  <span class="nt">dockerfile</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">docker/nginx/Dockerfile</span>
+</code></pre></div>
+
+<h4 id="volumes">volumes<a class="headerlink" href="#volumes" title="Permanent link">&para;</a></h4>
+<p>ボリュームのマウントを行います。
+コマンドの場合、 <code>-v $(pwd)/public:/var/www/html/public:ro &lt;IMAGE ID&gt;</code> オプションと同一です。</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">volumes</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">./public:/var/www/html/public:ro</span>
+</code></pre></div>
+
+<h4 id="ports">ports<a class="headerlink" href="#ports" title="Permanent link">&para;</a></h4>
+<p>ポートの開放を行います。<br />
+左にホストのポートを、右にコンテナのポートを指定します。<br />
+コマンドの場合、 <code>-p 8080:80</code> オプションと同一です。</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">ports</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">8080:80</span>
+</code></pre></div>
+
+<h4 id="environment">environment<a class="headerlink" href="#environment" title="Permanent link">&para;</a></h4>
+<p>起動するコンテナへ環境変数を定義します。<br />
+コマンドの場合、 <code>-e PHP_HOST=app</code> オプションと同一です。</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">environment</span><span class="p">:</span>
+  <span class="nt">PHP_HOST</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">app</span>
+</code></pre></div>
+
+<h4 id="env_file">env_file<a class="headerlink" href="#env_file" title="Permanent link">&para;</a></h4>
+<p>ファイルに定義された環境変数を読み取り、コンテナへ定義します。</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">env_file</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">.env.example</span>
+</code></pre></div>
+
+<h4 id="command">command<a class="headerlink" href="#command" title="Permanent link">&para;</a></h4>
+<p>Dockerfileで定義されている <code>CMD</code> の上書きを行います。</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">command</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci</span>
+</code></pre></div>
+
+<h2 id="docker-compose">docker-composeのコマンド<a class="headerlink" href="#docker-compose" title="Permanent link">&para;</a></h2>
+<h3 id="up">up<a class="headerlink" href="#up" title="Permanent link">&para;</a></h3>
+<p>カレントディレクトリに存在する <code>docker-compose.yaml</code> を参照してdocker-composeの起動</p>
+<div class="codehilite"><pre><span></span><code>$ docker-compose up
+</code></pre></div>
+
+<p>終了させるには <code>Ctrl</code> + <code>c</code> </p>
+<h3 id="down">down<a class="headerlink" href="#down" title="Permanent link">&para;</a></h3>
+<p>カレントディレクトリの <code>docker-compose.yaml</code> に紐付いているContainerとNetworkを削除</p>
+<div class="codehilite"><pre><span></span><code>$ docker-compose down
+</code></pre></div>
+
+<p>Imageも削除</p>
+<div class="codehilite"><pre><span></span><code>$ docker-compose down --rmi all
+</code></pre></div>
+
+<h3 id="rm">rm<a class="headerlink" href="#rm" title="Permanent link">&para;</a></h3>
+<p>Volumeを削除</p>
+<div class="codehilite"><pre><span></span><code>$ docker-compose rm
+</code></pre></div>
+
+<div class="admonition note">
+<p class="admonition-title">Dockerで立ち上げたMySQLを使用する</p>
+<p>Docker/docker-composeで立ち上げたMySQLコンテナにアクセスすることはもちろん可能です。<br />
+ここではCLIでの接続の仕方を2種類紹介します。</p>
+<p><strong>パターン1 . 立ち上げたMySQLコンテナを利用して接続する</strong></p>
+<p><code>$ docker-compose up -d</code></p>
+<p><code>$ docker-compose exec mysql mysql</code></p>
+<p><strong>パターン2 . ホストPCからMySQLコンテナへアクセスする。</strong></p>
+<p><code>$ apk add --no-cache mysql-client</code></p>
+<p><code>$ mysql -h 127.0.0.1 -P 13306</code></p>
+<p>ここで改めてDockerネットワークを振り返ってみると面白いかも知れません。</p>
+</div>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
+        
+          <a href="../orchestration/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+            </div>
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  前
+                </span>
+                オーケストレーションツール
+              </div>
+            </div>
+          </a>
+        
+        
+          <a href="../introduction/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  次
+                </span>
+                プロダクションへの導入
+              </div>
+            </div>
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../../assets/javascripts/vendor.93c04032.min.js"></script>
+      <script src="../../assets/javascripts/bundle.83e5331e.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "\u30af\u30ea\u30c3\u30d7\u30dc\u30fc\u30c9\u3078\u30b3\u30d4\u30fc", "clipboard.copied": "\u30b3\u30d4\u30fc\u3057\u307e\u3057\u305f", "search.config.lang": "ja", "search.config.pipeline": "trimmer, stemmer", "search.config.separator": "[\\s\\-\u3000\u3001\u3002\uff0c\uff0e]+", "search.placeholder": "\u691c\u7d22", "search.result.placeholder": "\u691c\u7d22\u30ad\u30fc\u30ef\u30fc\u30c9\u3092\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044", "search.result.none": "\u4f55\u3082\u898b\u3064\u304b\u308a\u307e\u305b\u3093\u3067\u3057\u305f", "search.result.one": "1\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.other": "#\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
+      
+      <script>
+        app = initialize({
+          base: "../..",
+          features: [],
+          search: Object.assign({
+            worker: "../../assets/javascripts/worker/search.8c7e0a7e.min.js"
+          }, typeof search !== "undefined" && search)
+        })
+      </script>
+      
+        <script src="../../assets/custom.js"></script>
+      
+    
+  </body>
+</html>

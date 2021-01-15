@@ -1,0 +1,1002 @@
+
+<!doctype html>
+<html lang="ja" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      <link rel="shortcut icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.2.4">
+    
+    
+      
+        <title>Dockerfileのベストプラクティス - 入門 Docker</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.15aa0b43.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.75751829.min.css">
+        
+          
+          
+          <meta name="theme-color" content="#4051b5">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
+      
+    
+    
+    
+      <link rel="stylesheet" href="../../assets/custom.css">
+    
+    
+      
+        
+<script>window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga("create","UA-136697307-1","y-ohgi.com"),ga("set","anonymizeIp",!0),ga("send","pageview"),document.addEventListener("DOMContentLoaded",function(){document.forms.search&&document.forms.search.query.addEventListener("blur",function(){if(this.value){var e=document.location.pathname;ga("send","pageview",e+"?q="+this.value)}})}),document.addEventListener("DOMContentSwitch",function(){ga("send","pageview",document.location.pathname)})</script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="indigo" data-md-color-accent="indigo">
+      
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#_1" class="md-skip">
+          コンテンツにスキップ
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid" aria-label="Header">
+    <a href="../.." title="入門 Docker" class="md-header-nav__button md-logo" aria-label="入門 Docker">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header-nav__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header-nav__title" data-md-component="header-title">
+      <div class="md-header-nav__ellipsis">
+        <div class="md-header-nav__topic">
+          <span class="md-ellipsis">
+            入門 Docker
+          </span>
+        </div>
+        <div class="md-header-nav__topic">
+          <span class="md-ellipsis">
+            
+              Dockerfileのベストプラクティス
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      <label class="md-header-nav__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="検索" placeholder="検索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" data-md-component="search-reset" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="入門 Docker" class="md-nav__button md-logo" aria-label="入門 Docker">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    入門 Docker
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+
+  <li class="md-nav__item">
+    <a href="../.." class="md-nav__link">
+      Home
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+
+  
+  <li class="md-nav__item md-nav__item--nested">
+    
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2" >
+    
+    <label class="md-nav__link" for="nav-2">
+      はじめに
+      <span class="md-nav__icon md-icon"></span>
+    </label>
+    <nav class="md-nav" aria-label="はじめに" data-md-level="1">
+      <label class="md-nav__title" for="nav-2">
+        <span class="md-nav__icon md-icon"></span>
+        はじめに
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../../1_introduction/docker/" class="md-nav__link">
+      Dockerとは
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../../1_introduction/vm-docker/" class="md-nav__link">
+      VMとDocker
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../../1_introduction/hello-docker/" class="md-nav__link">
+      Hello Docker !
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+
+  
+  <li class="md-nav__item md-nav__item--nested">
+    
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3" >
+    
+    <label class="md-nav__link" for="nav-3">
+      コンポーネント
+      <span class="md-nav__icon md-icon"></span>
+    </label>
+    <nav class="md-nav" aria-label="コンポーネント" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
+        <span class="md-nav__icon md-icon"></span>
+        コンポーネント
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../../2_component/image/" class="md-nav__link">
+      image
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../../2_component/dockerfile/" class="md-nav__link">
+      dockerfile
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../../2_component/container/" class="md-nav__link">
+      container
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../../2_component/network/" class="md-nav__link">
+      network
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../../2_component/volume/" class="md-nav__link">
+      volume
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  
+
+
+  
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4" checked>
+    
+    <label class="md-nav__link" for="nav-4">
+      プロダクションでの活用
+      <span class="md-nav__icon md-icon"></span>
+    </label>
+    <nav class="md-nav" aria-label="プロダクションでの活用" data-md-level="1">
+      <label class="md-nav__title" for="nav-4">
+        <span class="md-nav__icon md-icon"></span>
+        プロダクションでの活用
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../design/" class="md-nav__link">
+      設計
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../security/" class="md-nav__link">
+      セキュリティ
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../debug/" class="md-nav__link">
+      デバッグ
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../image/" class="md-nav__link">
+      イメージの仕組み
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Dockerfileのベストプラクティス
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+    
+    <a href="./" class="md-nav__link md-nav__link--active">
+      Dockerfileのベストプラクティス
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="目次">
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目次
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    軽量なイメージを作る
+  </a>
+  
+    <nav class="md-nav" aria-label="軽量なイメージを作る">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    最小限の構成にする
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    軽量なベースイメージを使用する
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dockerignore" class="md-nav__link">
+    .dockerignoreを使う
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#build" class="md-nav__link">
+    Build
+  </a>
+  
+    <nav class="md-nav" aria-label="Build">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    キャッシュを意識する
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multi-stage-build" class="md-nav__link">
+    Multi-Stage Build
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    おまけ
+  </a>
+  
+    <nav class="md-nav" aria-label="おまけ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dockerfile" class="md-nav__link">
+    Dockerfile
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../orchestration/" class="md-nav__link">
+      オーケストレーションツール
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../docker-compose/" class="md-nav__link">
+      docker-compose
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../introduction/" class="md-nav__link">
+      プロダクションへの導入
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+
+  
+  <li class="md-nav__item md-nav__item--nested">
+    
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5" >
+    
+    <label class="md-nav__link" for="nav-5">
+      Tips
+      <span class="md-nav__icon md-icon"></span>
+    </label>
+    <nav class="md-nav" aria-label="Tips" data-md-level="1">
+      <label class="md-nav__title" for="nav-5">
+        <span class="md-nav__icon md-icon"></span>
+        Tips
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../../4_tips/tools/" class="md-nav__link">
+      tools
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../../4_tips/docker-compose/" class="md-nav__link">
+      docker-compose
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../../4_tips/book/" class="md-nav__link">
+      参考書
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="目次">
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目次
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    軽量なイメージを作る
+  </a>
+  
+    <nav class="md-nav" aria-label="軽量なイメージを作る">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    最小限の構成にする
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    軽量なベースイメージを使用する
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dockerignore" class="md-nav__link">
+    .dockerignoreを使う
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#build" class="md-nav__link">
+    Build
+  </a>
+  
+    <nav class="md-nav" aria-label="Build">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    キャッシュを意識する
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multi-stage-build" class="md-nav__link">
+    Multi-Stage Build
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    おまけ
+  </a>
+  
+    <nav class="md-nav" aria-label="おまけ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dockerfile" class="md-nav__link">
+    Dockerfile
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                  <h1>Dockerfileのベストプラクティス</h1>
+                
+                <p>この章ではDockerfileを記述する際のベストプラクティスについて記述します。</p>
+<h2 id="_1">軽量なイメージを作る<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>Docker Image はレイヤーが少なくサイズが軽いものが良いものだとされています。<br />
+レイヤーを増やすことはオーバーヘッドに繋がり、サイズはImageのpullの速度に繋がります。</p>
+<p>どのようなアプローチでDocker Image を作成すると良いかを見ていきましょう。</p>
+<h3 id="_2">最小限の構成にする<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
+<p>例えばPHPの環境を構築するのにCentOSのベースイメージで、phpenvを入れて、MySQLを入れて、、といったことは非推奨です。<br />
+DockerはいままでのVMとは思想が異なります。1コンテナ1プロセスになるように設計を行いましょう。<br />
+複数のプロセスを使用したい場合はそれぞれコンテナに分け、オーケストレーションツールを使用してコンテナを協調させて動かしましょう。</p>
+<h3 id="_3">軽量なベースイメージを使用する<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<p>Alpine OS という非常に軽量なOSが存在します。<br />
+まずはこのAlpine OS がベースとなっているDocker Image を使いましょう。</p>
+<p>メジャーな言語は一通りAlpineOSに対応しており、Node.jsも例に漏れず対応しております。<br />
+(nodeのDocker Image が12倍の差があります)
+<img alt="node alpine" src="../imgs/node-alpine.png" /></p>
+<h2 id="dockerignore">.dockerignoreを使う<a class="headerlink" href="#dockerignore" title="Permanent link">&para;</a></h2>
+<p>Dockerのビルド時に無視するファイル/ディレクトリを指定することができます。<br />
+".git" のようなコンテナ内に不要な情報、 "node_modules" のような上書きされると困るものを記述します。<br />
+<code>.dockerignore</code> は基本的に <code>.gitignore</code> と同じ書き方が可能です。</p>
+<div class="codehilite"><pre><span></span><code>.git/
+node_modules/
+</code></pre></div>
+
+<hr />
+<h2 id="build">Build<a class="headerlink" href="#build" title="Permanent link">&para;</a></h2>
+<h3 id="_4">キャッシュを意識する<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>Docker Image は各コマンド毎にキャッシュを作成します(これを中間レイヤーと呼びます)。<br />
+ビルド後に、コマンドの変更・ファイルの追加/更新など、なにか変化を起こすと、変化が起こったレイヤーの直前のキャッシュからビルドを実行します。  </p>
+<p>例えば単純な依存ライブラリのインストールだけ行えば問題ないNode.jsのアプリケーションがあったとします。<br />
+開発中は頻繁にコードの変更を行うはずです。コードの変更を行えばせっかく作成したキャッシュが効かなくなってしまい、ビルドのし直しになってしまいます。<br />
+単純な <code>npm install</code> が必要なアプリケーションであれば <code>package.json</code> と <code>package-lock.json</code> だけをコンテナ上へコピーして、その後スクリプトのコピーを行うと高速なビルドを実現できるでしょう。</p>
+<div class="codehilite"><pre><span></span><code>  FROM node:slim
+
+  WORKDIR /scripts
+
+<span class="gd">- COPY . .</span>
+<span class="gi">+ COPY ./package.json ./package-lock.json /scripts/</span>
+
+  RUN npm install
+
+<span class="gi">+ COPY . .</span>
+
+  CMD [&quot;npm&quot;, &quot;start&quot;]
+</code></pre></div>
+
+<h3 id="multi-stage-build">Multi-Stage Build<a class="headerlink" href="#multi-stage-build" title="Permanent link">&para;</a></h3>
+<p>Golangのようなビルドを行い成果物をバイナリとして吐き出す言語であれば、最小限のOSと成果物のバイナリの2つだけで動作します。<br />
+この2つだけの最低限の環境を用意するために活躍するのがMulti-Stage Buildです。  </p>
+<p>Multi-Stage Buildは複数のDocker Image を作り、最終的にその複数のDocker Image から任意のファイルだけを抽出して1つのDocker Image にします。  </p>
+<div class="codehilite"><pre><span></span><code><span class="c">#==================================================</span>
+<span class="c"># Build Layer</span>
+<span class="k">FROM</span> <span class="s">golang:1.12-alpine</span> <span class="k">as</span> <span class="s">build</span>
+
+<span class="k">WORKDIR</span><span class="s"> /go/app</span>
+
+<span class="k">COPY</span> . .
+
+<span class="k">RUN</span> apk add --no-cache git <span class="se">\</span>
+  <span class="o">&amp;&amp;</span> go build -o app
+
+<span class="c">#==================================================</span>
+<span class="c"># Run Layer</span>
+<span class="k">FROM</span> <span class="s">alpine</span>
+
+<span class="k">WORKDIR</span><span class="s"> /app</span>
+
+<span class="k">COPY</span> --from<span class="o">=</span>build /go/app/app .
+
+<span class="k">RUN</span> addgroup go <span class="se">\</span>
+  <span class="o">&amp;&amp;</span> adduser -D -G go go <span class="se">\</span>
+  <span class="o">&amp;&amp;</span> chown -R go:go /app/app
+
+<span class="k">CMD</span> <span class="p">[</span><span class="s2">&quot;./app&quot;</span><span class="p">]</span>
+</code></pre></div>
+
+<h2 id="_5">おまけ<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<p>軽量かつプロダクションを意識したイメージの例</p>
+<h3 id="dockerfile">Dockerfile<a class="headerlink" href="#dockerfile" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="k">FROM</span> <span class="s">node:alpine</span>
+
+<span class="k">ARG</span> <span class="nv">UID</span><span class="o">=</span><span class="m">991</span>
+<span class="k">ARG</span> <span class="nv">GID</span><span class="o">=</span><span class="m">991</span>
+
+<span class="k">ENV</span> <span class="nv">NODE_ENV</span><span class="o">=</span>production
+
+<span class="k">WORKDIR</span><span class="s"> /scripts</span>
+
+<span class="k">COPY</span> package.json package-lock.json /scripts/
+
+<span class="k">RUN</span> npm install --production --no-progress
+
+<span class="k">COPY</span> . .
+
+<span class="k">RUN</span> addgroup app -g <span class="si">${</span><span class="nv">GID</span><span class="si">}</span> <span class="se">\</span>
+  <span class="o">&amp;&amp;</span> adduser -D -G app -u <span class="si">${</span><span class="nv">UID</span><span class="si">}</span> app <span class="se">\</span>
+  <span class="o">&amp;&amp;</span> mv /root/.config /home/app/ <span class="se">\</span>
+  <span class="o">&amp;&amp;</span> chown -R app:app /scripts /home/app/.config
+
+<span class="k">USER</span><span class="s"> app</span>
+
+<span class="k">EXPOSE</span><span class="s"> 3000</span>
+
+<span class="k">CMD</span> <span class="p">[</span><span class="s2">&quot;npm&quot;</span><span class="p">,</span> <span class="s2">&quot;start&quot;</span><span class="p">]</span>
+</code></pre></div>
+
+<p>.dockerignore</p>
+<div class="codehilite"><pre><span></span><code>.git/
+node_modules/
+</code></pre></div>
+
+<p>イメージの確認</p>
+<div class="codehilite"><pre><span></span><code>$ docker build -t myapp:4 .
+   :
+$ docker images myapp
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+myapp               4                   9eb407f3406a        9 seconds ago       90MB
+myapp               3                   87ea6e63c875        32 minutes ago      160MB
+myapp               2                   919f447ae003        About an hour ago   160MB
+myapp               1                   61d3ff752744        About an hour ago   916MB
+$ docker history myapp:4
+IMAGE               CREATED             CREATED BY                                      SIZE                COMMENT
+9eb407f3406a        24 seconds ago      /bin/sh -c #(nop)  CMD [&quot;npm&quot; &quot;start&quot;]          0B
+32d79cd696ee        25 seconds ago      /bin/sh -c #(nop)  EXPOSE 3000                  0B
+ba11be6658e8        25 seconds ago      /bin/sh -c #(nop)  USER app                     0B
+10aaa4ed01f2        25 seconds ago      |2 GID=991 UID=991 /bin/sh -c addgroup app -…   6.04MB
+beba948fcdf5        28 seconds ago      /bin/sh -c #(nop) COPY dir:4031660d2eb87dd44…   30.1kB
+d208f024298c        4 minutes ago       |2 GID=991 UID=991 /bin/sh -c npm install --…   7.8MB
+499f23e1c8b9        4 minutes ago       /bin/sh -c #(nop) COPY multi:7bbf60d9ee13776…   26.2kB
+0989832456ac        4 minutes ago       /bin/sh -c #(nop) WORKDIR /scripts              0B
+8b17881bf747        4 minutes ago       /bin/sh -c #(nop)  ENV NODE_ENV=production      0B
+6a42c9764263        4 minutes ago       /bin/sh -c #(nop)  ARG GID=991                  0B
+b740f7e04562        4 minutes ago       /bin/sh -c #(nop)  ARG UID=991                  0B
+953c516e1466        30 hours ago        /bin/sh -c #(nop)  CMD [&quot;node&quot;]                 0B
+&lt;missing&gt;           30 hours ago        /bin/sh -c apk add --no-cache --virtual .bui…   5.1MB
+&lt;missing&gt;           30 hours ago        /bin/sh -c #(nop)  ENV YARN_VERSION=1.15.2      0B
+&lt;missing&gt;           30 hours ago        /bin/sh -c addgroup -g 1000 node     &amp;&amp; addu…   65.4MB
+&lt;missing&gt;           31 hours ago        /bin/sh -c #(nop)  ENV NODE_VERSION=11.13.0     0B
+&lt;missing&gt;           3 weeks ago         /bin/sh -c #(nop)  CMD [&quot;/bin/sh&quot;]              0B
+&lt;missing&gt;           3 weeks ago         /bin/sh -c #(nop) ADD file:88875982b0512a9d0…   5.53MB
+</code></pre></div>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
+        
+          <a href="../image/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+            </div>
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  前
+                </span>
+                イメージの仕組み
+              </div>
+            </div>
+          </a>
+        
+        
+          <a href="../orchestration/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  次
+                </span>
+                オーケストレーションツール
+              </div>
+            </div>
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../../assets/javascripts/vendor.93c04032.min.js"></script>
+      <script src="../../assets/javascripts/bundle.83e5331e.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "\u30af\u30ea\u30c3\u30d7\u30dc\u30fc\u30c9\u3078\u30b3\u30d4\u30fc", "clipboard.copied": "\u30b3\u30d4\u30fc\u3057\u307e\u3057\u305f", "search.config.lang": "ja", "search.config.pipeline": "trimmer, stemmer", "search.config.separator": "[\\s\\-\u3000\u3001\u3002\uff0c\uff0e]+", "search.placeholder": "\u691c\u7d22", "search.result.placeholder": "\u691c\u7d22\u30ad\u30fc\u30ef\u30fc\u30c9\u3092\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044", "search.result.none": "\u4f55\u3082\u898b\u3064\u304b\u308a\u307e\u305b\u3093\u3067\u3057\u305f", "search.result.one": "1\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.other": "#\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
+      
+      <script>
+        app = initialize({
+          base: "../..",
+          features: [],
+          search: Object.assign({
+            worker: "../../assets/javascripts/worker/search.8c7e0a7e.min.js"
+          }, typeof search !== "undefined" && search)
+        })
+      </script>
+      
+        <script src="../../assets/custom.js"></script>
+      
+    
+  </body>
+</html>
